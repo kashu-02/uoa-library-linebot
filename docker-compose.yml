@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  library:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./src/:/app
+    ports:
+      - "3030:3000"
+    tty: true
+    stdin_open: true
+    environment:
+      NODE_ENV: development
