@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js 3000",
-    "start-production": "node server.js"
+    "start-production": "node server.js",
+    "lint": "yarn prettier --write '**/*.{js,json,md,html}' && yarn eslint --fix ."
   },
   "keywords": [],
   "author": "",

@@ -1,5 +1,5 @@
 import textEvent from './text/text.js';
-import  imageEvent from './image/image.js';
+import imageEvent from './image/image.js';
 
 // メッセージイベントが飛んできた時に呼び出される
 export default async (event, client) => {
@@ -14,9 +14,9 @@ export default async (event, client) => {
     }
     case 'image': {
       // イメージの場合はimageEventを呼び出す
-      message = await imageEvent(event, client) 
+      message = await imageEvent(event, client);
       // 実行結果をmessageに格納する
-     
+
       break;
     }
     // それ以外の場合

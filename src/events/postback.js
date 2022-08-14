@@ -1,13 +1,13 @@
-import searchDetailNextPage from './postback/searchDetailNextPage.js'
-import collectionInfo from './postback/collectionInfo.js'
+import searchDetailNextPage from './postback/searchDetailNextPage.js';
+import collectionInfo from './postback/collectionInfo.js';
 
 // Postbackイベントが飛んできた時に呼び出される
 export default async (event, client) => {
   let message;
-  const data = JSON.parse(event.postback.data)
+  const data = JSON.parse(event.postback.data);
   switch (data.type) {
     case 'searchDetailNextPage': {
-      console.log(`Postback`)
+      console.log(`Postback`);
       message = await searchDetailNextPage(data, client);
       break;
     }

@@ -1,17 +1,17 @@
+import searchBooks from '../lib/searchbooks.js';
 
-import searchBooks from '../lib/searchbooks.js'
-
-export default async (data, client) => {
+export default async (data) => {
   let message;
-  let index = data.index + 4
+  let index = data.index + 4;
   let searchedresult = await searchBooks(data.words, index);
-  let contents = [];
-  console.log(`searchedresultitems: ${searchedresult.items.length}`)
-  while(searchedresult.items.length === 0){
-    index = index + 4
+  const contents = [];
+  console.log(`searchedresultitems: ${searchedresult.items.length}`);
+  while (searchedresult.items.length === 0) {
+    index += 4;
+    // eslint-disable-next-line no-await-in-loop
     searchedresult = await searchBooks(data.words, index);
   }
-  searchedresult.items.forEach(element => {
+  searchedresult.items.forEach((element) => {
     contents.push({
       type: 'bubble',
       body: {
@@ -20,9 +20,11 @@ export default async (data, client) => {
         contents: [
           {
             type: 'image',
-            url: element.thumbnailLink || 'https://via.placeholder.com/500x500.png?text=No+image',
-            size: 'xxl'
-          }, 
+            url:
+              element.thumbnailLink ||
+              'https://via.placeholder.com/500x500.png?text=No+image',
+            size: 'xxl',
+          },
           {
             type: 'text',
             text: element.title,
@@ -30,14 +32,14 @@ export default async (data, client) => {
             size: 'xl',
             weight: 'bold',
             wrap: true,
-            margin: 'lg'
+            margin: 'lg',
           },
           {
             type: 'text',
             text: element.description || ' ',
             wrap: true,
             margin: 'md',
-            maxLines: 5
+            maxLines: 5,
           },
           {
             type: 'text',
@@ -45,14 +47,14 @@ export default async (data, client) => {
             size: 'xs',
             wrap: false,
             margin: 'md',
-            color: '#808080'
+            color: '#808080',
           },
           {
             type: 'text',
             text: `出版: ${element.publisher || '不明'}`,
             color: '#808080',
             size: 'xs',
-            wrap: false
+            wrap: false,
           },
           {
             type: 'text',
@@ -62,7 +64,7 @@ export default async (data, client) => {
             wrap: false,
             align: 'start',
             position: 'relative',
-            adjustMode: 'shrink-to-fit'
+            adjustMode: 'shrink-to-fit',
           },
           {
             type: 'box',
@@ -85,7 +87,7 @@ export default async (data, client) => {
                 wrap: false,
                 align: 'start',
                 position: 'relative',
-              }
+              },
             ],
             spacing: 'none',
           },
@@ -96,9 +98,9 @@ export default async (data, client) => {
           displayText: element.title,
           data: JSON.stringify({
             type: 'bookDetail',
-            ISBN_13: element.ISBN_13
-          })
-        }
+            ISBN_13: element.ISBN_13,
+          }),
+        },
       },
       footer: {
         type: 'box',
@@ -112,17 +114,18 @@ export default async (data, client) => {
               displayText: element.title,
               data: JSON.stringify({
                 type: 'bookDetail',
-                ISBN_13: element.ISBN_13
-              })
+                ISBN_13: element.ISBN_13,
+              }),
             },
-            style: 'link'
-          }
-        ]
-      }
+            style: 'link',
+          },
+        ],
+      },
     });
-  }); //End of forEach
-  
-  if (!searchedresult.isEnd) { //If 
+  }); // End of forEach
+
+  if (!searchedresult.isEnd) {
+    // If
     contents.push({
       type: 'bubble',
       body: {
@@ -137,11 +140,11 @@ export default async (data, client) => {
               displayText: '次のページ',
               data: JSON.stringify({
                 type: 'searchDetailNextPage',
-                index: index,
-                words: data.words
-              })
-            }
-          }
+                index,
+                words: data.words,
+              }),
+            },
+          },
         ],
         justifyContent: 'center',
         alignItems: 'center',
@@ -151,22 +154,23 @@ export default async (data, client) => {
           displayText: '次のページ',
           data: JSON.stringify({
             type: 'searchDetailNextPage',
-            index: index,
-            words: data.words
-          })
-        }
-      }
+            index,
+            words: data.words,
+          }),
+        },
+      },
     });
   }
-  console.log(`\n\n\ncontents: \n${JSON.stringify(contents)}\n\n\n\n`)
+  console.log(`\n\n\ncontents: \n${JSON.stringify(contents)}\n\n\n\n`);
+  // eslint-disable-next-line prefer-const
   message = {
-    type: "flex",
-    altText: "検索結果",
+    type: 'flex',
+    altText: '検索結果',
     contents: {
       type: 'carousel',
-      contents: contents,
-    }
+      contents,
+    },
   };
-  
+
   return message;
-}
+};

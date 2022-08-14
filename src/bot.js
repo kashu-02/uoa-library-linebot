@@ -1,18 +1,21 @@
 import line from '@line/bot-sdk';
 import crypto from 'crypto';
-import 'dotenv/config'
+import 'dotenv/config';
 
 import messageFunc from './events/message.js';
-import postbackFunc from './events/postback.js'
+import postbackFunc from './events/postback.js';
 
 const client = new line.Client({
   channelAccessToken: process.env.channelAccessToken,
-})
+});
 
 export default (req, res) => {
   console.log(req.body.events);
   // 署名検証
-  const signature = crypto.createHmac('sha256', process.env.channelSecret).update(JSON.stringify(req.body)).digest('base64');
+  const signature = crypto
+    .createHmac('sha256', process.env.channelSecret)
+    .update(JSON.stringify(req.body))
+    .digest('base64');
   const checkHeader = req.header('X-Line-Signature');
   const { events } = req.body;
   let message;
@@ -20,7 +23,7 @@ export default (req, res) => {
   if (signature === checkHeader) {
     // eventsは配列になっているため、forEachで1つずつ処理をする
     // 例えば同時に2つメッセージがきた場合は配列に入って1つのWebhookで飛んでくることがある
-    console.log(`\n\n\nEvents Number: ${events.length}\n\n\n`)
+    console.log(`\n\n\nEvents Number: ${events.length}\n\n\n`);
     events.forEach(async (event) => {
       // イベントごとに条件分岐
       switch (event.type) {
@@ -36,7 +39,7 @@ export default (req, res) => {
           message = await postbackFunc(event);
           break;
         }
-          /*
+        /*
         case 'join': {
           // 参加イベントが飛んできた時はjoin.jsのindexを呼び出す
           // 処理結果をmessageに格納
@@ -80,10 +83,16 @@ export default (req, res) => {
         // 返信するメッセージをログに出力
         console.log(`返信メッセージ: \n${JSON.stringify(message)}`);
         // メッセージを返信
-        client.replyMessage(event.replyToken, message)
+        client
+          .replyMessage(event.replyToken, message)
           .then(() => {
             console.log('Reply succeeded');
-          }).catch((err) => console.log(`\n\nERROR:\n${JSON.stringify(message)}\n${JSON.stringify(err)}`));
+          })
+          .catch((err) =>
+            console.log(
+              `\n\nERROR:\n${JSON.stringify(message)}\n${JSON.stringify(err)}`
+            )
+          );
       }
     });
     // 署名検証に失敗した場合
